@@ -66,6 +66,13 @@ restore_muon(){
     echo "会返回原先备份时的 address 和 peerId 则证明导入成功"
 }
 
+clean_muon(){
+    echo "由于官方Bug，错误日志会增加服务器硬盘占用导致空间不够，需要定时清除"
+    echo "建议1天进行一次日志清除,正在执行中...."
+    cat /dev/null > $(docker inspect --format='{{.LogPath}}' $(docker ps -a | grep muon-node | awk '{ print $1}'))
+    echo "清除结束,假如你更改了容器的命名或者服务器磁盘空间没有减少"
+    echo "请前往目录 /var/lib/docker/containers/ 下的节点容器,清除.log结尾的文件即可"
+}
 
 echo && echo -e " ${Red_font_prefix}Moun 一键脚本${Font_color_suffix} by \033[1;35mLattice\033[0m
 此脚本完全免费开源，由推特用户 ${Green_font_prefix}@L4ttIc3${Font_color_suffix} 开发
@@ -81,6 +88,7 @@ echo && echo -e " ${Red_font_prefix}Moun 一键脚本${Font_color_suffix} by \03
  ${Green_font_prefix} 5.查询 Muon 日志 ${Font_color_suffix}
  ${Green_font_prefix} 6.备份 Muon 节点 ${Font_color_suffix}
  ${Green_font_prefix} 7.恢复 Muon 节点 ${Font_color_suffix}
+ ${Green_font_prefix} 8.清除 Muon 日志 ${Font_color_suffix}
  ———————————————————————" && echo
 read -e -p " 请输入数字 [1-7]:" num
 case "$num" in
@@ -104,6 +112,9 @@ case "$num" in
     ;;
 7)
     restore_muon
+    ;;
+8)
+    clean_muon
     ;;
 *)
     echo
