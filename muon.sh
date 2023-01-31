@@ -32,6 +32,7 @@ install_muon(){
 }
 
 run_muon(){
+    cd muon-node-js
     docker-compose up -d $(docker-compose ps -a | grep muon-node | awk '{ print $3}')
     echo "启动成功！已在后台运行"
     echo "请使用检查状态功能确保正常运行"
@@ -39,6 +40,7 @@ run_muon(){
 }
 
 stop_muon(){
+    cd muon-node-js
     docker-compose down $(docker-compose ps -a | grep muon-node | awk '{ print $3}')
     sleep 10
     echo "停止成功！"
@@ -46,6 +48,7 @@ stop_muon(){
 
 log_muon(){
     echo "正在查询，如需退出 LOG 查询请使用 CTRL+C"
+    cd muon-node-js
     docker-compose logs -f muon_api
 }
 
@@ -60,6 +63,7 @@ restore_muon(){
     echo "如果你需要导入之前的节点备份，请在安装并运行Muon后的情况下使用该功能"
     echo "执行此操作前请把 .env 文件放在根目录下"
     docker cp .env muon-node:/usr/src/muon-node-js/
+    cd muon-node-js
     docker-compose restart
     sleep 5
     echo "导入成功后请访问网址 http://此处替换为你的服务器IP:8000/status"
